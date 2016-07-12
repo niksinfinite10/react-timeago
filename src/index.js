@@ -1,6 +1,6 @@
 /* @flow */
 import React, {Component} from 'react'
-
+var moment = require('moment');
 export type Unit = 'second'
           | 'minute'
           | 'hour'
@@ -136,11 +136,28 @@ export default class TimeAgo extends Component<DefaultProps, Props, void> {
       ...passDownProps
     } = this.props
     /* eslint-enable no-unused-vars */
-    const then = (new Date(date)).valueOf()
+    
+   
+     getShortTimeString(longAgoString){
+     var compare =longAgoString.substr(longAgoString.indexOf(' ')).trim();
+     var digit =longAgoString.split(' ');
+     digit= (!isNaN(parseInt(digit[0]))) ? digit[0]: digit=''
+
+     return defaultRelativeTime[compare] ? digit+" "+defaultRelativeTime[compare] : longAgoString;
+}
+    
+    
+//     const then = (new Date(date)).valueOf()
+    const then = this.getShortTimeString(moment.unix(date))
     const now = Date.now()
     const seconds = Math.round(Math.abs(now - then) / 1000)
     const suffix = then < now ? 'ago' : 'from now'
 
+
+
+    
+    
+    
     const [value, unit]
       = seconds < MINUTE
       ? [Math.round(seconds), 'second']
